@@ -1,0 +1,638 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weblocalmx - Sistema de Reservas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Variables y estilos generales */
+        :root {
+            --primary-color: #6366f1;         /* Indigo intenso */
+            --primary-dark: #4f46e5;          /* Indigo oscuro */
+            --primary-light: #a5b4fc;         /* Indigo claro */
+            --secondary-color: #10b981;       /* Verde esmeralda */
+            --secondary-dark: #059669;        /* Verde oscuro */
+            --accent-color: #f43f5e;          /* Rosa intenso */
+            --dark-color: #111827;            /* Casi negro */
+            --dark-surface: #1f2937;          /* Gris muy oscuro */
+            --medium-dark: #374151;           /* Gris oscuro */
+            --light-text: #9ca3af;            /* Gris claro para texto */
+            --white: #ffffff;                 /* Blanco */
+            --gradient-dark: linear-gradient(135deg, #111827 0%, #1e40af 100%);
+            --gradient-accent: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+            --shadow-glow: 0 0 15px rgba(99, 102, 241, 0.5);
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
+            line-height: 1.5;
+            color: var(--white);
+            background-color: var(--dark-color);
+            font-size: 16px;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: -0.025em;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: var(--radius-md);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            padding: 16px 32px;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 1.125rem;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            box-shadow: var(--shadow-md);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg), var(--shadow-glow);
+        }
+
+        .btn-accent {
+            background-color: var(--accent-color);
+        }
+
+        header {
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            background-color: rgba(17, 24, 39, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-md);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.75rem;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--primary-color), var(--primary-light));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-decoration: none;
+        }
+
+        section {
+            padding: 80px 0;
+            position: relative;
+        }
+
+        .divider {
+            width: 100%;
+            height: 1px;
+            background-color: rgba(255, 255, 255, 0.1);
+            margin: 40px 0;
+        }
+
+        .divider-gradient {
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--primary-color), transparent);
+            margin: 40px 0;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 120px 0 80px;
+            background: var(--gradient-dark);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(135deg, transparent 0%, rgba(99, 102, 241, 0.1) 100%);
+            clip-path: polygon(50% 0, 100% 0, 100% 100%, 0% 100%);
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 16px;
+            background: linear-gradient(to right, var(--white), var(--primary-light));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1.1;
+        }
+
+        .hero h2 {
+            font-size: 1.5rem;
+            margin-bottom: 24px;
+            color: var(--primary-light);
+            font-weight: 400;
+        }
+
+        /* Feature Section */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 40px;
+        }
+
+        .feature-card {
+            background-color: var(--dark-surface);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background-color: var(--primary-color);
+            transition: var(--transition);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg), 0 0 20px rgba(99, 102, 241, 0.2);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .feature-card:hover::before {
+            width: 100%;
+            opacity: 0.1;
+        }
+
+        .feature-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 16px;
+            color: var(--white);
+            position: relative;
+        }
+
+        .feature-card p {
+            color: var(--light-text);
+            position: relative;
+        }
+
+        /* Pricing Section */
+        .pricing {
+            background-color: var(--dark-surface);
+            padding: 80px 0;
+        }
+
+        .price-card {
+            background-color: var(--medium-dark);
+            border-radius: var(--radius-xl);
+            padding: 48px;
+            box-shadow: var(--shadow-lg);
+            max-width: 800px;
+            margin: 40px auto 0;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .price-card::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 150px;
+            height: 150px;
+            background-color: var(--primary-color);
+            opacity: 0.1;
+            border-radius: 50%;
+        }
+
+        .price-value {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin: 24px 0;
+            color: var(--white);
+            position: relative;
+        }
+
+        .features-list {
+            text-align: left;
+            margin: 32px 0;
+            position: relative;
+        }
+
+        .features-list li {
+            padding: 16px 0;
+            padding-left: 36px;
+            position: relative;
+            list-style-type: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .features-list li:last-child {
+            border-bottom: none;
+        }
+
+        .features-list li:before {
+            content: '✓';
+            color: var(--secondary-color);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        /* CTA Section */
+        .cta {
+            background: var(--gradient-accent);
+            padding: 80px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 24px;
+            color: var(--white);
+        }
+
+        .cta p {
+            font-size: 1.25rem;
+            margin-bottom: 32px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .cta .btn {
+            background-color: var(--white);
+            color: var(--primary-dark);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .cta .btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: var(--shadow-lg), 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-surface);
+            color: var(--light-text);
+            padding: 48px 0 24px;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--primary-color), var(--primary-light));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 24px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .footer-link {
+            color: var(--light-text);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-link:hover {
+            color: var(--white);
+        }
+
+        .copyright {
+            margin-top: 24px;
+            font-size: 0.875rem;
+            color: var(--light-text);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 24px;
+        }
+
+        /* Media Queries */
+        @media (max-width: 1024px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            .price-card {
+                padding: 32px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            section {
+                padding: 60px 0;
+            }
+            
+            .hero {
+                padding: 80px 0 60px;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero h2 {
+                font-size: 1.25rem;
+            }
+            
+            .price-value {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .features-list li {
+                padding-left: 28px;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+
+        .highlight-text {
+            color: var(--primary-light);
+            font-weight: 600;
+        }
+
+        .gradient-text {
+            background: linear-gradient(to right, var(--primary-color), var(--primary-light));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .guarantee-box {
+            background-color: var(--dark-surface);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            border-left: 4px solid var(--secondary-color);
+            margin-top: 32px;
+            font-size: 0.875rem;
+            color: var(--light-text);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">Weblocalmx</div>
+        </div>
+    </header>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container text-center">
+            <h1>Conquista el mundo digital</h1>
+            <h2>Tu negocio merece ser encontrado</h2>
+            
+            <div class="divider-gradient"></div>
+            
+            <p style="font-size: 1.25rem; margin-bottom: 32px;">
+                La brecha digital separa a quienes <span class="highlight-text">prosperan</span> de quienes <span class="highlight-text">desaparecen</span>.<br>
+                <strong>Tu talento ya no puede esperar.</strong>
+            </p>
+            
+            <a href="#contacto" class="btn btn-accent">Solicitar información</a>
+        </div>
+    </section>
+    
+    <!-- Pricing Section -->
+    <section class="pricing">
+        <div class="container text-center">
+            <h2 style="font-size: 2.5rem; margin-bottom: 16px;">Sistema de reservas profesional</h2>
+            
+            <div class="price-card">
+                <div class="price-value">$350 USD</div>
+                <p style="color: var(--light-text); margin-bottom: 32px;">Implementacion completa</p>
+                
+                <ul class="features-list">
+                    <li><strong>Pagos automáticos</strong> integrados con Stripe/PayPal</li>
+                    <li><strong>Enlaces de videollamada</strong> generados al instante</li>
+                    <li><strong>Zonas horarias sincronizadas</strong> sin confusiones</li>
+                    <li><strong>Implementación en 20 días</strong> con soporte por 6 meses</li>
+                </ul>
+                
+                <a href="#contacto" class="btn" style="margin-top: 32px;">Empezar ahora</a>
+                
+                <div class="guarantee-box">
+                    <strong style="color: var(--white);">Tu garantía:</strong> Si después de nuestra capacitación sientes que es demasiado complicado, te devolvemos el 100% de tu inversión.
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Problem Section -->
+    <section>
+        <div class="container text-center">
+            <h2 style="font-size: 2.5rem; margin-bottom: 32px;">Deja de perder clientes</h2>
+            
+            <p style="font-size: 1.25rem; max-width: 800px; margin: 0 auto 48px;">
+                Tus potenciales clientes ya no llaman por teléfono.<br>
+                <span class="gradient-text">Reservan online o simplemente eligen a otro.</span>
+            </p>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>Sin llamadas interrumpiendo tu día</h3>
+                    <p>Automatiza la gestión de agenda y recupera el control de tu tiempo.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>Sin agendas extraviadas</h3>
+                    <p>Todo centralizado en un sistema que nunca olvida ni confunde tus citas.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>Sin pagos pendientes</h3>
+                    <p>Cobra por adelantado automáticamente y elimina las cancelaciones de última hora.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>Con clientes satisfechos</h3>
+                    <p>Proyecta profesionalismo desde el primer contacto hasta la última sesión.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Bridge Section -->
+    <section style="background-color: var(--dark-surface);">
+        <div class="container text-center">
+            <h2 style="font-size: 2.5rem; margin-bottom: 32px;">El peuente que necesitas</h2>
+            
+            <p style="font-size: 1.25rem; max-width: 800px; margin: 0 auto 48px;">
+                <span class="highlight-text">Implementamos todo. Te capacitamos. Te acompañamos.</span><br>
+                Tú solo dedícate a lo que mejor sabes hacer.
+            </p>
+            
+            <div class="divider-gradient"></div>
+            
+            <div style="max-width: 800px; margin: 0 auto; text-align: left;">
+                <p style="margin-bottom: 24px; font-size: 1.125rem;">
+                    El sistema se adapta perfectamente a:
+                </p>
+                
+                <ul style="list-style: none; margin-bottom: 32px;">
+                    <li style="padding: 12px 0; padding-left: 32px; position: relative;">
+                        <span style="color: var(--secondary-color); position: absolute; left: 0;">✓</span>
+                        Terapeutas y coaches
+                    </li>
+                    <li style="padding: 12px 0; padding-left: 32px; position: relative;">
+                        <span style="color: var(--secondary-color); position: absolute; left: 0;">✓</span>
+                        Instructores de yoga y fitness
+                    </li>
+                    <li style="padding: 12px 0; padding-left: 32px; position: relative;">
+                        <span style="color: var(--secondary-color); position: absolute; left: 0;">✓</span>
+                        Profesores y tutores online
+                    </li>
+                    <li style="padding: 12px 0; padding-left: 32px; position: relative;">
+                        <span style="color: var(--secondary-color); position: absolute; left: 0;">✓</span>
+                        Consultores y freelancers
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+    
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="cta-content">
+            <h2>Da el paso ahora</h2>
+            <p>Tu presencia digital profesional está a solo un clic de distancia.</p>
+            <a href="#contacto" class="btn">SOLICITAR IMPLEMENTACIÓN</a>
+        </div>
+    </section>
+    
+    <!-- Contact Section -->
+    <section id="contacto">
+        <div class="container text-center">
+            <h2 style="font-size: 2.5rem; margin-bottom: 32px;">CONTACTO</h2>
+            
+            <div style="max-width: 600px; margin: 0 auto; background-color: var(--dark-surface); padding: 48px; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);">
+                <p style="margin-bottom: 24px; font-size: 1.125rem;">
+                    Déjanos tus datos y nos pondremos en contacto contigo para iniciar tu transformación digital.
+                </p>
+                
+                <a href="mailto:contacto@weblocalmx.com" style="display: inline-block; color: var(--primary-light); text-decoration: none; margin-bottom: 16px;">
+                    ✉ contacto@weblocalmx.com
+                </a>
+                
+                <a href="#" style="display: inline-block; color: var(--primary-light); text-decoration: none;">
+                    📱 WhatsApp
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-logo">Weblocalmx</div>
+            
+            <div class="footer-links">
+                <a href="#" class="footer-link">Inicio</a>
+                <a href="#" class="footer-link">Servicios</a>
+                <a href="#" class="footer-link">Contacto</a>
+                <a href="#" class="footer-link">Privacidad</a>
+            </div>
+            
+            <div class="copyright">
+                <p>Weblocalmx Tijuana B.C. | 2025</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
